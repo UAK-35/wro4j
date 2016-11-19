@@ -100,11 +100,6 @@ public class ImageUrlRewriter {
       LOG.debug("newImageLocation: {}", newImageLocation);
       return newImageLocation;
     }
-    if (UrlUriLocator.isValid(cssUri)) {
-      final String computedCssUri = ServletContextUriLocator.isValid(imageUrl) ? computeCssUriForExternalServer(cssUri)
-          : cssUri;
-      return computeNewImageLocation(computedCssUri, imageUrl);
-    }
     if (ClasspathUriLocator.isValid(cssUri)) {
       final String proxyUrl = context.proxyPrefix + computeNewImageLocation(cssUri, imageUrl);
       final String contextRelativeUrl = prependContextPath(imageUrl);
@@ -112,14 +107,18 @@ public class ImageUrlRewriter {
       // leave imageUrl unchanged if it is a servlet context relative resource
       return (ServletContextUriLocator.isValid(imageUrl) ? contextRelativeUrl : proxyUrl);
     }
+    if (UrlUriLocator.isValid(cssUri)) {
+      final String computedCssUri = ServletContextUriLocator.isValid(imageUrl) ? computeCssUriForExternalServer(cssUri)
+          : cssUri;
+      return computeNewImageLocation(computedCssUri, imageUrl);
+    }
     throw new WroRuntimeException("Could not replace imageUrl: " + imageUrl + ", contained at location: " + cssUri);
   }
 
   private String prependContextPath(final String imageUrl) {
     //avoid double slash
-    final String contextRelativeUrl = context.contextPath.endsWith(ROOT_CONTEXT_PATH) ? imageUrl
+    return context.contextPath.endsWith(ROOT_CONTEXT_PATH) ? imageUrl
         : context.contextPath + imageUrl;
-    return contextRelativeUrl;
   }
 
   /**

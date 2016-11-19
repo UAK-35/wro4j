@@ -17,12 +17,12 @@ import ro.isdc.wro.model.resource.locator.UriLocator;
  */
 public class TestDefaultUriLocatorFactory {
   private DefaultUriLocatorFactory victim;
-  
+
   @BeforeClass
   public static void onBeforeClass() {
     assertEquals(0, Context.countActive());
   }
-  
+
   @Before
   public void setUp() {
     victim = new DefaultUriLocatorFactory();
@@ -30,11 +30,12 @@ public class TestDefaultUriLocatorFactory {
 
   @Test
   public void shouldHaveSeveralDefaultLocators() {
-    assertEquals(6, victim.getUriLocators().size());
+    assertEquals(7, victim.getUriLocators().size());
   }
 
   @Test
   public void shouldUseServletContextLocatorWithPreferredLocatorStrategy() {
+    System.out.println(victim.getUriLocators());
     for (final UriLocator locator : victim.getUriLocators()) {
       if (locator instanceof ServletContextUriLocator) {
         assertEquals(LocatorStrategy.DISPATCHER_FIRST, ((ServletContextUriLocator) locator).getLocatorStrategy());

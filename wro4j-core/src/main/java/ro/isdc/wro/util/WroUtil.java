@@ -47,6 +47,7 @@ import ro.isdc.wro.model.resource.processor.ResourcePreProcessor;
  * @created Created on Nov 13, 2008
  */
 public final class WroUtil {
+  private static final String SEPARATOR_UNIX = "/";
   private static final String SEPARATOR_WINDOWS = "\\";
   /**
    * Empty line pattern.
@@ -119,8 +120,7 @@ public final class WroUtil {
     if (nextSlash == -1) {
       return "";
     }
-    final String pathInfo = noSlash.substring(nextSlash);
-    return pathInfo;
+    return noSlash.substring(nextSlash);
   }
 
   /**
@@ -175,7 +175,7 @@ public final class WroUtil {
    * @param prefix
    *          the prefix to find, may be null
    * @param ignoreCase
-   *          inidicates whether the compare should ignore case (case insensitive) or not.
+   *          indicates whether the compare should ignore case (case insensitive) or not.
    * @return <code>true</code> if the String starts with the prefix or both <code>null</code>
    */
   private static boolean startsWith(final String str, final String prefix, final boolean ignoreCase) {
@@ -390,6 +390,17 @@ public final class WroUtil {
     } catch (final IOException e) {
       throw WroRuntimeException.wrap(e);
     }
+  }
+
+  /**
+   * Join two paths (using unix separator) and make sure to use exactly one separator (by adding or removing one if required).
+   */
+  public static String joinPath(final String left, final String right) {
+    String leftHand = left;
+    if (!left.endsWith(SEPARATOR_UNIX)) {
+      leftHand += SEPARATOR_UNIX;
+    }
+    return leftHand + right.replaceFirst("^/(.*)", "$1");
   }
 
   /**
